@@ -5,7 +5,6 @@ import com.google.gson.JsonObject
 plugins {
 	id 'java'
 	id 'maven-publish'
-
 	id 'idea'
 	id 'eclipse'
 	id("fabric-loom") version "0.2.7-SNAPSHOT"
@@ -189,6 +188,19 @@ publishing {
 	// select the repositories you want to publish to
 	repositories {
 //		mavenLocal()
+		if (System.getenv("MAVEN_PUBLISH_TOKEN") != null)
+		{
+			maven {
+				url = "https://maven.legacyfabric.net/releases/"
+				credentials {
+					username = "BobTheBuildSlave"
+					password = System.getenv("MAVEN_PUBLISH_TOKEN")
+				}
+				authentication {
+					basic(BasicAuthentication)
+				}
+			}
+		}
 	}
 }
 apply from: 'https://github.com/FabricMC/fabric-docs/raw/master/gradle/license.gradle'
