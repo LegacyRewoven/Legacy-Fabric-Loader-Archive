@@ -16,7 +16,6 @@
 
 package net.fabricmc.loader.game;
 
-import com.google.gson.Gson;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.entrypoint.EntrypointTransformer;
 import net.fabricmc.loader.entrypoint.minecraft.EntrypointPatchBranding;
@@ -28,6 +27,8 @@ import net.fabricmc.loader.metadata.BuiltinModMetadata;
 import net.fabricmc.loader.minecraft.McVersionLookup;
 import net.fabricmc.loader.minecraft.McVersionLookup.McVersion;
 import net.fabricmc.loader.util.Arguments;
+import net.fabricmc.loader.util.SystemProperties;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -36,12 +37,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 public class MinecraftGameProvider implements GameProvider {
-	private static final Gson GSON = new Gson();
-
 	private EnvType envType;
 	private String entrypoint;
 	private Arguments arguments;
@@ -87,10 +87,14 @@ public class MinecraftGameProvider implements GameProvider {
 		}
 
 		return Arrays.asList(
-			new BuiltinMod(url, new BuiltinModMetadata.Builder(getGameId(), getNormalizedGameVersion())
-				.setName(getGameName())
-				.build())
-		);
+				new BuiltinMod(url, new BuiltinModMetadata.Builder(getGameId(), getNormalizedGameVersion())
+						.setName(getGameName())
+						.build())
+				);
+	}
+
+	public Path getGameJar() {
+		return gameJar;
 	}
 
 	@Override
@@ -128,8 +132,11 @@ public class MinecraftGameProvider implements GameProvider {
 	}
 
 	@Override
-	public boolean locateGame(EnvType envType, ClassLoader loader) {
+	public boolean locateGame(EnvType envType, String[] args, ClassLoader loader) {
 		this.envType = envType;
+		this.arguments = new Arguments();
+		arguments.parse(args);
+
 		List<String> entrypointClasses;
 
 		if (envType == EnvType.CLIENT) {
@@ -139,6 +146,7 @@ public class MinecraftGameProvider implements GameProvider {
 		}
 
 		Optional<GameProviderHelper.EntrypointResult> entrypointResult = GameProviderHelper.findFirstClass(loader, entrypointClasses);
+
 		if (!entrypointResult.isPresent()) {
 			return false;
 		}
@@ -147,17 +155,43 @@ public class MinecraftGameProvider implements GameProvider {
 		gameJar = entrypointResult.get().entrypointPath;
 		realmsJar = GameProviderHelper.getSource(loader, "realmsVersion").orElse(null);
 		hasModLoader = GameProviderHelper.getSource(loader, "ModLoader.class").isPresent();
-		versionData = McVersionLookup.getVersion(gameJar);
+
+		String version = arguments.remove(Arguments.GAME_VERSION);
+		if (version == null) version = System.getProperty(SystemProperties.GAME_VERSION);
+		versionData = version != null ? McVersionLookup.getVersion(version) : McVersionLookup.getVersion(gameJar);
+
+		FabricLauncherBase.processArgumentMap(arguments, envType);
 
 		return true;
 	}
 
 	@Override
-	public void acceptArguments(String... argStrs) {
-		this.arguments = new Arguments();
-		arguments.parse(argStrs);
+	public String[] getLaunchArguments(boolean sanitize) {
+		if (arguments != null) {
+			List<String> list = new ArrayList<>(Arrays.asList(arguments.toArray()));
 
-		FabricLauncherBase.processArgumentMap(arguments, envType);
+			if (sanitize) {
+				int remove = 0;
+				Iterator<String> iterator = list.iterator();
+
+				while (iterator.hasNext()) {
+					String next = iterator.next();
+
+					if ("--accessToken".equals(next)) {
+						remove = 2;
+					}
+
+					if (remove > 0) {
+						iterator.remove();
+						remove--;
+					}
+				}
+			}
+
+			return list.toArray(new String[0]);
+		}
+
+		return new String[0];
 	}
 
 	@Override
