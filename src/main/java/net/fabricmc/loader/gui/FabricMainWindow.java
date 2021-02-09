@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -161,6 +162,7 @@ class FabricMainWindow {
 		}
 
 		window.setVisible(true);
+		window.requestFocus();
 	}
 
 	private static JPanel createTreePanel(FabricStatusNode rootNode, FabricTreeWarningLevel minimumWarningLevel,

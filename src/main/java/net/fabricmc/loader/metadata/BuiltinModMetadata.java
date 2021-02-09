@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -74,6 +75,11 @@ public final class BuiltinModMetadata extends AbstractModMetadata {
 	@Override
 	public String getId() {
 		return id;
+	}
+
+	@Override
+	public Collection<String> getProvides() {
+		return Collections.emptyList();
 	}
 
 	@Override

@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +20,9 @@ package net.fabricmc.loader.discovery;
 import net.fabricmc.loader.FabricLoader;
 
 import java.net.URL;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 @FunctionalInterface
 public interface ModCandidateFinder {
-	void findCandidates(FabricLoader loader, Consumer<URL> urlProposer);
+	void findCandidates(FabricLoader loader, BiConsumer<URL, Boolean> urlProposer);
 }

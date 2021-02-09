@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,6 +49,10 @@ class BuiltinMetadataWrapper extends AbstractModMetadata implements LoaderModMet
 	public String getType() { return parent.getType(); }
 	@Override
 	public String getId() { return parent.getId(); }
+
+	@Override
+	public Collection<String> getProvides() { return parent.getProvides(); }
+
 	@Override
 	public Version getVersion() { return parent.getVersion(); }
 	@Override

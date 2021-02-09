@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,6 +37,7 @@ public interface LoaderModMetadata extends ModMetadata {
 	Map<String, String> getLanguageAdapterDefinitions();
 	Collection<NestedJarEntry> getJars();
 	Collection<String> getMixinConfigs(EnvType type);
+	/* @Nullable */
 	String getAccessWidener();
 	boolean loadsInEnvironment(EnvType type);
 

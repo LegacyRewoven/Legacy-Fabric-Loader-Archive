@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,11 +25,13 @@ public class ModCandidate {
 	private final LoaderModMetadata info;
 	private final URL originUrl;
 	private final int depth;
+	private final boolean requiresRemap;
 
-	public ModCandidate(LoaderModMetadata info, URL originUrl, int depth) {
+	public ModCandidate(LoaderModMetadata info, URL originUrl, int depth, boolean requiresRemap) {
 		this.info = info;
 		this.originUrl = originUrl;
 		this.depth = depth;
+		this.requiresRemap = requiresRemap;
 	}
 
 	public URL getOriginUrl() {
@@ -41,6 +44,10 @@ public class ModCandidate {
 
 	public int getDepth() {
 		return depth;
+	}
+
+	public boolean requiresRemap() {
+		return requiresRemap;
 	}
 
 	@Override

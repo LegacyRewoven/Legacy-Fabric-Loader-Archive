@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,6 +51,14 @@ public abstract class AbstractModMetadata implements ModMetadata {
 		return getCustomValues().get(key);
 	}
 
+	/**
+	 * Converts a custom value to a json element.
+	 * This will be removed in a future version when we remove the gson dependency.
+	 *
+	 * @param value the custom value
+	 * @return a json element
+	 */
+	@Deprecated
 	private static JsonElement convert(CustomValue value) {
 		switch (value.getType()) {
 		case ARRAY: {

@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,21 +17,28 @@
 
 package net.fabricmc.loader.entrypoint;
 
-import net.fabricmc.loader.ModContainer;
+import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
+
+import java.util.function.Supplier;
 
 public class EntrypointContainerImpl<T> implements EntrypointContainer<T> {
 	private final ModContainer container;
-	private final T entrypoint;
+	private final Supplier<T> entrypointSupplier;
+	private T instance;
 
-	public EntrypointContainerImpl(ModContainer container, T entrypoint) {
+	public EntrypointContainerImpl(ModContainer container, Supplier<T> entrypointSupplier) {
 		this.container = container;
-		this.entrypoint = entrypoint;
+		this.entrypointSupplier = entrypointSupplier;
 	}
 
 	@Override
-	public T getEntrypoint() {
-		return entrypoint;
+	public synchronized T getEntrypoint() {
+		if (instance == null) {
+			this.instance = entrypointSupplier.get();
+		}
+
+		return instance;
 	}
 
 	@Override

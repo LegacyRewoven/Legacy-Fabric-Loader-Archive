@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -183,4 +184,11 @@ public interface FabricLoader {
 
 	@Deprecated
 	File getConfigDirectory();
+
+	/**
+	 * Gets the command line arguments used to launch the game. If this is printed for debugging, make sure {@code sanitize} is {@code true}.
+	 * @param sanitize Whether to remove sensitive information
+	 * @return the launch arguments
+	 */
+	String[] getLaunchArguments(boolean sanitize);
 }

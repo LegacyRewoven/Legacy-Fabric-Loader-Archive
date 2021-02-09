@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +20,8 @@ package net.fabricmc.loader.util;
 import java.util.*;
 
 public final class Arguments {
+	public static final String GAME_VERSION = "fabric.gameVersion";
+
 	private final Map<String, String> values;
 	private final List<String> extraArgs;
 

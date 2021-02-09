@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 - 2021 Legacy Fabric
  * Copyright 2016 FabricMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +18,13 @@
 package net.fabricmc.loader.launch.knot;
 
 import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.util.SystemProperties;
 
 import java.io.File;
 
 public class KnotServer {
 	public static void main(String[] args) {
-		String gameJarPath = System.getProperty("fabric.gameJarPath");
+		String gameJarPath = System.getProperty(SystemProperties.GAME_JAR_PATH);
 		new Knot(EnvType.SERVER, gameJarPath != null ? new File(gameJarPath) : null).init(args);
 	}
 }
