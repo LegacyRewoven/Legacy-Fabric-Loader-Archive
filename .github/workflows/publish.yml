@@ -14,4 +14,4 @@ jobs:
       - name : Publish to maven
         env:
           MAVEN_PUBLISH_TOKEN: ${{ secrets.MAVEN_PUBLISH_TOKEN }} 
-        run: ./gradlew publish  
+        run: ./gradlew checkVersion build publish --stacktrace
