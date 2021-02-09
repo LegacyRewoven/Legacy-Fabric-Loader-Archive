@@ -9,7 +9,7 @@ plugins {
 	id("org.cadixdev.licenser") version "0.5.0"
 }
 
-sourceCompatdibility = 1.8
+sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "fabric-loader-1.8.9"
