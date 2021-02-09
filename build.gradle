@@ -6,11 +6,10 @@ plugins {
 	id("fabric-loom") version "0.4-SNAPSHOT"
 	id "maven"
 	id "signing"
-	id "com.jfrog.bintray" version "1.8.4"
 	id("org.cadixdev.licenser") version "0.5.0"
 }
 
-sourceCompatibility = 1.8
+sourceCompatdibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "fabric-loader-1.8.9"
@@ -131,38 +130,6 @@ tasks.build.dependsOn "copyJsonLw"
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
-
-	// The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
-	// JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
-	// We'll use that if it's available, but otherwise we'll use the older option.
-	if (JavaVersion.current().isJava9Compatible()) {
-		it.options.release = 8
-	}
-}
-
-bintray {
-	user = project.hasProperty("bintrayUser") ? project.property("bintrayUser") : System.getenv("BINTRAY_USER")
-	key = project.hasProperty("bintrayApiKey") ? project.property("bintrayApiKey") : System.getenv("BINTRAY_KEY")
-	publications = ["mavenJava"]
-	publish = true
-	pkg {
-		repo = "Legacy-Fabric-Maven"
-		name = "fabric-loader-1.8.9"
-		userOrg = "legacy-fabric"
-		licenses = ["CC0-1.0"]
-		version {
-			name = project.version
-			vcsTag = project.version
-			released = new Date()
-			githubRepo = "Legacy-Fabric/fabric-loader-1.8.9"
-			websiteUrl = "https://github.com/Legacy-Fabric/fabric-loader-1.8.9"
-			issueTrackerUrl = "https://github.com/Legacy-Fabric/fabric-loader-1.8.9/issues"
-			vcsUrl = "https://github.com/Legacy-Fabric/fabric-loader-1.8.9.git"
-			gpg {
-				sign = true
-			}
-		}
-	}
 }
 
 task javadocJar(type: Jar) {
@@ -223,7 +190,7 @@ publishing {
 // A task to ensure that the version being released has not already been released.
 task checkVersion {
 	doFirst {
-		def xml = new URL("https://maven.fabricmc.net/net/fabricmc/fabric-loader/maven-metadata.xml").text
+		def xml = new URL("https://maven.legacyfabric.net/releases/net/fabricmc/fabric-loader/maven-metadata.xml").text
 		def metadata = new XmlSlurper().parseText(xml)
 		def versions = metadata.versioning.versions.version*.text();
 		if (versions.contains(version)) {
