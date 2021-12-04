@@ -3,11 +3,8 @@ plugins {
 	id "maven-publish"
 	id "idea"
 	id "eclipse"
-	id("fabric-loom") version "0.5-SNAPSHOT"
-	id "maven"
-	id "signing"
-	id("org.cadixdev.licenser") version "0.5.0"
-	id("elect86.magik") version "0.2.4"
+	id("fabric-loom") version "0.7-SNAPSHOT"
+	id("org.cadixdev.licenser") version "0.6.1"
 }
 
 sourceCompatibility = 1.8
@@ -22,9 +19,6 @@ static def buildTime() {
 	df.setTimeZone(TimeZone.getTimeZone("UTC"))
 	return df.format(new Date())
 }
-// Fetch build number from Jenkins
-def ENV = System.getenv()
-version = version + (ENV.GITHUB_ACTIONS ? "" : "+local")
 
 repositories {
 	mavenCentral()
@@ -46,10 +40,10 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:1.8.9"
-	mappings "net.fabricmc:yarn:1.8.9+build.202112030747"
+	mappings "io.github.legacyrewoven:yarn:1.8.9+build.202112030747"
 
 	// Minecraft"s JAR uses these annotations
-	compile "com.google.code.findbugs:jsr305:3.0.2"
+	implementation "com.google.code.findbugs:jsr305:3.0.2"
 	// fabric-loader dependencies
 	implementation "org.ow2.asm:asm:${project.asm_version}"
 	implementation "org.ow2.asm:asm-analysis:${project.asm_version}"
@@ -191,19 +185,9 @@ publishing {
 
 	// select the repositories you want to publish to
 	repositories {
-//		mavenLocal()
-		if (System.getenv("MAVEN_PUBLISH_TOKEN") != null)
-		{
-			maven {
-				url = "https://maven.legacyfabric.net/"
-				credentials {
-					username = "BobTheBuildSlave"
-					password = System.getenv("MAVEN_PUBLISH_TOKEN")
-				}
-				authentication {
-					basic(BasicAuthentication)
-				}
-			}
+		maven {
+			name = "legacy-rewoven-maven"
+			url = "../legacy-rewoven-maven"
 		}
 	}
 }
